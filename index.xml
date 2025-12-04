@@ -6,15 +6,15 @@
       version="2.0">
 <channel>
 <title>Liam&#39;s Blog</title>
-<link>https://your-website-url.example.com/</link>
-<atom:link href="https://your-website-url.example.com/index.xml" rel="self" type="application/rss+xml"/>
+<link>https://liamtg.github.io/blog/</link>
+<atom:link href="https://liamtg.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A blog built with Quarto</description>
 <generator>quarto-1.8.26</generator>
 <lastBuildDate>Wed, 12 Nov 2025 13:00:00 GMT</lastBuildDate>
 <item>
   <title>We All Need to Speak AI</title>
   <dc:creator>Liam Gilchrist</dc:creator>
-  <link>https://your-website-url.example.com/posts/202511_ffmpeg/</link>
+  <link>https://liamtg.github.io/blog/posts/202511_ffmpeg/</link>
   <description><![CDATA[ 
 
 
@@ -23,7 +23,7 @@
 
 <section id="we-all-need-to-speak-ai" class="level1">
 <h1>We All Need to Speak AI</h1>
-<p><img src="https://your-website-url.example.com/posts/202511_ffmpeg/image.png" class="img-fluid"></p>
+<p><img src="https://liamtg.github.io/blog/posts/202511_ffmpeg/image.png" class="img-fluid"></p>
 <p>It’s trite to say that large language models will fundamentally reshape the way we work. What’s less clear is how that reshaping will actually happen in practice.</p>
 <p>I frequently find myself doing tasks I really am not qualified to be doing. Recently a case in point was creating a demo video for a new product feature. Unfortunately, I was not blessed with a high degree of artistic ability (my art teacher once described my drawings as “unique,” which was not a compliment).</p>
 <p>So normally I would outsource any kind of video work. But since in this case the prototype lived on my machine, and we were also under pretty significant time pressure, I decided I would pull this together myself.</p>
@@ -71,9 +71,9 @@
   <category>agents</category>
   <category>FFmpeg</category>
   <category>workflows</category>
-  <guid>https://your-website-url.example.com/posts/202511_ffmpeg/</guid>
+  <guid>https://liamtg.github.io/blog/posts/202511_ffmpeg/</guid>
   <pubDate>Wed, 12 Nov 2025 13:00:00 GMT</pubDate>
-  <media:content url="https://your-website-url.example.com/posts/202511_ffmpeg/image.png" medium="image" type="image/png" height="96" width="144"/>
+  <media:content url="https://liamtg.github.io/blog/posts/202511_ffmpeg/image.png" medium="image" type="image/png" height="96" width="144"/>
 </item>
 </channel>
 </rss>
