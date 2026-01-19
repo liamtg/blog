@@ -76,7 +76,6 @@
 <p>A useful discipline is to treat any agent output as a <em>proposal</em>, not an answer, and to make the next step something that can quickly prove or disprove it - write a test (or minimal reproducible example) that reproduces the current failure or specifies the behaviour you need, build a tiny prototype to test the key assumptions, identify and explicitly check the implicit assumptions. Wherever possible, prefer executable validation over persuasive prose. And when the stakes are high (or the switching cost is high), it can be worth taking more than one promising line of reasoning further on separate git branches before committing.</p>
 <p>This is also where a side benefit of multiple agents appears: it can be reassuring to have one agent play “QA” and try to break the plan systematically.</p>
 <p>As impressive as these agents are, they don’t remove the need for your own judgement. Highly capable models are exceptionally good at producing answers that <em>sound</em> highly capable. If you don’t do some independent exploration and ensure that you understand the problem space, it’s easy to accept a well-structured, plausible recommendation that rests on flawed logic or an incorrect premise.</p>
-<hr>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
