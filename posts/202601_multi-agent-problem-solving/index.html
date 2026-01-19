@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Liam Gilchrist">
+<meta name="dcterms.date" content="2026-01-19">
+<meta name="description" content="How to effectively explore the solution space by running multiple AI agents in parallel.">
+
+<title>Solving Challenging Problems with Multiple Agents – Liam’s Blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Liam’s Blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Liam Gilchrist</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Solving Challenging Problems with Multiple Agents</h1>
+                  <div>
+        <div class="description">
+          How to effectively explore the solution space by running multiple AI agents in parallel.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">LLMs</div>
+                <div class="quarto-category">Agents</div>
+                <div class="quarto-category">Productivity</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Liam Gilchrist </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>When I’m tackling a complex coding problem — whether I’m architecting a critical component, diagnosing a pervasive bug, or integrating substantial new functionality — I almost always run multiple AI agents in parallel.</p>
+<p>By <em>agents</em>, I mean independent coding-assistant sessions (for example Claude Code, Codex, Gemini CLI), run side-by-side to pursue different hypotheses. I’m not doing anything exotic with orchestration frameworks: in practice it’s my IDE flanked by a handful of terminal sessions, each agent connected to the repository and (if they’re making changes) working on separate git branches to avoid collisions.</p>
+<p>Whilst I find the different perspectives valuable, the main reason I do this is so that I can explore multiple branches of the solution space quickly, before I commit to any one of them.</p>
+<p>Nathaniel Whittemore has called this the “Dr Strange Theory of AI agent work”, a reference to the scene in <em>Avengers: Infinity War</em> where Dr Strange peers into over fourteen million possible futures to find the one path to success.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> It’s one of the more remarkable consequences of “intelligence too cheap to meter”:<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> we can now deploy parallel intelligence to traverse numerous paths that would be impractical to explore one at a time. A single person working alone can now direct a small team—assigning different agents to pursue different hypotheses, then synthesising their output into a decision.</p>
+<p>I came to this as a former lawyer who now runs a legal tech company. I’m comfortable working in a codebase, and I regularly find myself deep in R&amp;D tasks where the hard part isn’t “coding” so much as translating messy, real-world legal complexity into solutions that are consistent and reliable. In this piece, I want to share how this approach works in practice: where it works best (and where it doesn’t), why it works, and the techniques I’ve found most effective for getting the best out of it.</p>
+<section id="the-branches-unexplored" class="level2">
+<h2 class="anchored" data-anchor-id="the-branches-unexplored">The Branches Unexplored</h2>
+<p>The core limitation of using a single agent is not that it <em>can’t</em> consider alternatives — it can — but that it tends to commit early to a framing. LLM output is stochastic, but it’s also path-dependent: once a line of reasoning is written into the context window, subsequent generation is conditioned on it, which encourages the model to stay consistent with that path. In effect, a single agent run becomes one trajectory through the solution space.</p>
+<p>This early commitment creates an anchoring effect that shapes everything that follows. The analysis can <em>look</em> comprehensive, yet in practice it often becomes a walk down one or two plausible branches of a much larger decision tree. Even when you explicitly ask an agent to consider multiple branches of reasoning, those branches will be explored in a correlated, anchored way within the same narrative.</p>
+<p>That raises an obvious risk: what if the best solution sits on a branch the agent never seriously explores?</p>
+<p>This is exactly where multiple agents come into their own. You can set each agent to pursue a distinct line of enquiry, forcing broad exploration instead of prematurely pruning the tree. Each agent can then explore its chosen path deeply, without being pulled back into a shared narrative too early.</p>
+<p><img src="Gemini_Generated_Image_x3pijbx3pijbx3pi.png" class="img-fluid" alt="Infographic diagram titled 'AI Workflow Comparison: Single vs. Multiple Agents.' The left side illustrates a 'Standard Workflow (Single Agent)' as a linear, vertical path where a single agent makes early choices, pruning alternative options marked with red X's, leading to a potentially premature solution based on sequential analysis. The right side illustrates a 'Multi-Agent Workflow (Parallel Exploration)' where a single problem branches into three distinct, coloured parallel paths (labeled Cognitive Divergence), pursued independently by Agent A, Agent B, and Agent C using different models and contexts. These three paths converge into a central 'Synthesis &amp; Critique Loop (Debate &amp; Evaluation)' node before resulting in a final 'Robust Solution,' demonstrating parallel exploration and synthesised outcomes."></p>
+<p>Because the agents work independently without seeing one another’s drafts, they avoid the kind of “cross-contamination” you often get when one thread tries to explore competing approaches simultaneously. Ask a single agent to compare a rules-based approach with a machine-learning approach, and by the time it reaches the second option it’s often already anchored to the framing of the first. The comparison may be fair, but it’s rarely <em>independent</em>.</p>
+<p>Ultimately, the goal is for each agent’s work to be a separate roll of the dice through the solution space. Of course, if every agent starts from the same assumptions, you’ll get near-identical answers. The key is diversity: you need to deliberately construct a varied “team” of agents to encourage genuine cognitive divergence.</p>
+</section>
+<section id="cognitive-divergence-how-to-roll-the-dice" class="level2">
+<h2 class="anchored" data-anchor-id="cognitive-divergence-how-to-roll-the-dice">Cognitive Divergence: How to Roll the Dice</h2>
+<p>The most valuable outcomes come when your agents disagree.</p>
+<p>On a recent project, I used three agents to decide whether to analyse input data deterministically (hard-coded rules) or probabilistically (using an LLM). Two agents favoured a rules-based approach, since it was fast, efficient and reproducible, and it handled our sample data well. The third agent focused almost entirely on out-of-sample edge cases: the kinds of situations that would inevitably break any rule set we could reasonably write. It was this divergence that was critical. It highlighted the trade-offs early and led us towards the hybrid approach we ultimately adopted: deterministic where tests could guarantee coverage, and an LLM-first fallback when the input was outside those guarantees.</p>
+<p>There are a few practical ways to engineer this kind of divergence:</p>
+<ul>
+<li><p><strong>Use different models.</strong> Claude, Codex and Gemini often take meaningfully different routes through the same problem. The point isn’t which model is “best”; it’s that different strengths and blind spots create productive tension.</p></li>
+<li><p><strong>Vary the context.</strong> Give agents different starting material (or different slices of it) so they follow different reasoning trajectories.</p></li>
+<li><p><strong>Vary the role and constraints.</strong> One agent is tasked with “fastest shippable path”, another with “most robust long-term design”, another with “assume this will break in production and tell me how”.</p></li>
+<li><p><strong>Include at least one low-context run.</strong> An agent given minimal context is less likely to inherit your implicit assumptions, and can reframe the problem in ways you might not expect.</p></li>
+</ul>
+<p>A debugging example may be instructive here. We had code intended to generate Microsoft Word documents, but it could only produce a file that Word insisted on “repairing” before it would open cleanly. We assigned two agents to investigate. Both received the broken document, but only one was given the repaired version as well.</p>
+<p>Both agents identified the immediate issue — malformed XML in how track changes were being inserted. But the agent <em>without</em> the repaired document went further. It traced the issue back to a shared function that only triggered for certain document types. That’s what made the bug insidious: the function didn’t always run, so the failures appeared sporadic rather than systematic. By surfacing the root cause, we fixed an entire class of problems we hadn’t yet encountered.</p>
+<p>This is the real value of multi-agent work: different instincts and different starting points. One agent pushes for a clean deterministic solution, another worries about edge cases, and a third reframes the problem entirely. Done well, that breadth can makes the eventual decision much more robust.</p>
+<p>But running multiple agents in parallel creates a new problem of its own: you now have a handful of opinions, competing architectural patterns, and a lot of noise. The task becomes consolidation: what do we do next?</p>
+</section>
+<section id="synthesis-uncovering-the-path-forward" class="level2">
+<h2 class="anchored" data-anchor-id="synthesis-uncovering-the-path-forward">Synthesis: Uncovering the Path Forward</h2>
+<p>One of the most effective ways I’ve found to synthesise conflicting responses is to force the disagreements into the open and make the trade-offs explicit.</p>
+<p>In practice, I often run a lightweight critique loop, something like:</p>
+<ol type="1">
+<li><p><strong>Independent proposals</strong> (Agents A and B each propose a solution)</p></li>
+<li><p><strong>Swap &amp; critique</strong> (A critiques B; B critiques A — assumptions, failure modes, trade-offs)</p></li>
+<li><p><strong>Merge</strong> (combine the strongest elements into a “best-of” proposal)</p></li>
+<li><p><strong>Red team</strong> (Agent C attacks the merged plan for edge cases and failure modes)</p></li>
+<li><p><strong>Decide + record</strong> (final decision, assumptions, and the tests that will validate it)</p></li>
+</ol>
+<p><img src="Gemini_Generated_Image_wdj5xqwdj5xqwdj5.png" class="img-fluid" alt="Infographic diagram titled 'Example Structured Critique Loop'. Two parallel initial steps, 'AGENT A: Proposal 1' and 'AGENT B: Proposal 2', lead into cross-referencing 'SWAP &amp; CRITIQUE' boxes where each agent reviews the other's proposal. Their outputs combine into a central 'MERGED PROPOSAL ('Best-of' Version)'. This merged proposal is then passed downward to 'AGENT C (Red Team)' to attack for failure modes and edge cases. The resulting analysis goes to a 'JUDGE' step which applies a score rubric based on criteria like speed and robustness. The diagram ends at a final bottom box labeled 'FINAL OUTPUT: Decision + Assumptions + Tests'."></p>
+<p>Forcing debates like this into the open surfaces issues that a single-thread workflow would often bury. It also tends to produce a stronger result than any original analysis: many of the best ideas can emerge during this critique and synthesis stage.</p>
+<p>Even when the approaches are fundamentally incompatible — say, Agent A advocates for a complex Python object model while Agent B suggests a lightweight shell script — the “losing” path can still be valuable. It often reveals logic gaps or edge cases the “winning” agent missed.</p>
+<p>Depending on the problem, it can also be worth running more than one promising (and potentially divergent) path for longer before committing — especially when the cost of switching later is high. This is common with decisions like choosing between two very different libraries for a core dependency, or deciding between an in-memory approach and a database-first design.</p>
+<p>With respect to the latter case, we faced this exact trade-off. Our initial instinct was that the speed and simplicity of an in-memory approach would provide the best user experience. But after exploring both approaches in parallel, it became clear that it wouldn’t give us the flexibility we needed for the functionality we were aiming for. Without that parallel exploration, we’d likely have built ourselves into a corner and paid for it later in a painful refactor.</p>
+<p>In these cases, being able to branch cleanly and let agents explore fundamentally different implementations in parallel can be incredibly powerful. Just as importantly, keeping a record of the branches you explored — even the ones you abandon — creates a valuable trail of evidence you and your future agents can return to as the project evolves.</p>
+</section>
+<section id="validation-and-pitfalls" class="level2">
+<h2 class="anchored" data-anchor-id="validation-and-pitfalls">Validation and Pitfalls</h2>
+<p>Of course, a multi-agent approach still has its own pitfalls. The most insidious is false confidence from consensus: when multiple agents converge on the same answer, it’s tempting to treat that as validation. But models share training data and blind spots, so whilst convergence may well mean you’ve found a robust solution, it may also mean you’ve found a popular mistake. The opposite problem is equally real: if your agents return four incompatible approaches and you lack the domain knowledge to evaluate them, it can become overwhelming.</p>
+<p>A useful discipline is to treat any agent output as a <em>proposal</em>, not an answer, and to make the next step something that can quickly prove or disprove it - write a test (or minimal reproducible example) that reproduces the current failure or specifies the behaviour you need, build a tiny prototype to test the key assumptions, identify and explicitly check the implicit assumptions. Wherever possible, prefer executable validation over persuasive prose. And when the stakes are high (or the switching cost is high), it can be worth taking more than one promising line of reasoning further on separate git branches before committing.</p>
+<p>This is also where a side benefit of multiple agents appears: it can be reassuring to have one agent play “QA” and try to break the plan systematically.</p>
+<p>As impressive as these agents are, they don’t remove the need for your own judgement. Highly capable models are exceptionally good at producing answers that <em>sound</em> highly capable. If you don’t do some independent exploration and ensure that you understand the problem space, it’s easy to accept a well-structured, plausible recommendation that rests on flawed logic or an incorrect premise.</p>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Not every problem is complex enough to justify running multiple agents. The approach shines when uncertainty is high and the cost of choosing the wrong path is significant. But there’s a real cost: spinning agents up, providing context, reconciling competing outputs, the extra cognitive load — and, depending on your setup, token usage across parallel runs can add up quickly.</p>
+<p>It’s rarely worth it for simple execution work, or when you can validate the answer quickly with a small prototype. I’ll also avoid it when a decision is easily reversible — it may be faster to build, test, and iterate.</p>
+<p>In practice, I move between single-agent and multi-agent modes within the same project. When a project involves an entirely new product category, it can be highly instructive to use multiple agents early — exploring use cases, designing primitives, and pressure-testing underlying data models. Once the shape of the problem is clearer, I’ll often return to a single agent, and only bring multiple agents back in when the work becomes non-obvious again.</p>
+<p>But when a problem <em>does</em> demand deep, careful consideration across several viable options, I’ve found this approach invaluable. My key takeaways:</p>
+<ul>
+<li><p><strong>Do the thinking yourself first</strong> — don’t outsource your understanding to the model.</p></li>
+<li><p><strong>Diversify your agents</strong> — vary models, context, constraints, and starting assumptions.</p></li>
+<li><p><strong>Mix guided and unguided runs</strong> — test your hypotheses, but leave room for reframing.</p></li>
+<li><p><strong>Make agents critique one another</strong> — structured debate surfaces hidden assumptions.</p></li>
+<li><p><strong>Validate ruthlessly</strong> — tests and prototypes beat persuasive reasoning every time.</p></li>
+<li><p><strong>Resist premature commitment</strong> — you have parallel intelligence available, so use it.</p></li>
+<li><p><strong>Keep a record of explorations</strong> — even abandoned branches become valuable context later.</p></li>
+</ul>
+<p>Every individual now has what previously required a team: parallel, specialised intelligence that can explore multiple paths simultaneously. The hard part is learning how to wield it.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Nathaniel Whittemore, “The Dr.&nbsp;Strange Theory of AI Agent Work,” LinkedIn (Feb 21, 2025), https://www.linkedin.com/pulse/dr-strange-theory-ai-agent-work-nathaniel-whittemore-ueswe.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Sam Altman, “The Gentle Singularity” (10 June 2025), https://blog.samaltman.com/the-gentle-singularity.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/liamtg\.github\.io\/blog");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

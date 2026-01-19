@@ -10,7 +10,110 @@
 <atom:link href="https://liamtg.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
 <description>A blog built with Quarto</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Wed, 12 Nov 2025 13:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 18 Jan 2026 13:00:00 GMT</lastBuildDate>
+<item>
+  <title>Solving Challenging Problems with Multiple Agents</title>
+  <dc:creator>Liam Gilchrist</dc:creator>
+  <link>https://liamtg.github.io/blog/posts/202601_multi-agent-problem-solving/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>When I’m tackling a complex coding problem — whether I’m architecting a critical component, diagnosing a pervasive bug, or integrating substantial new functionality — I almost always run multiple AI agents in parallel.</p>
+<p>By <em>agents</em>, I mean independent coding-assistant sessions (for example Claude Code, Codex, Gemini CLI), run side-by-side to pursue different hypotheses. I’m not doing anything exotic with orchestration frameworks: in practice it’s my IDE flanked by a handful of terminal sessions, each agent connected to the repository and (if they’re making changes) working on separate git branches to avoid collisions.</p>
+<p>Whilst I find the different perspectives valuable, the main reason I do this is so that I can explore multiple branches of the solution space quickly, before I commit to any one of them.</p>
+<p>Nathaniel Whittemore has called this the “Dr Strange Theory of AI agent work”, a reference to the scene in <em>Avengers: Infinity War</em> where Dr Strange peers into over fourteen million possible futures to find the one path to success.<sup>1</sup> It’s one of the more remarkable consequences of “intelligence too cheap to meter”:<sup>2</sup> we can now deploy parallel intelligence to traverse numerous paths that would be impractical to explore one at a time. A single person working alone can now direct a small team—assigning different agents to pursue different hypotheses, then synthesising their output into a decision.</p>
+<p>I came to this as a former lawyer who now runs a legal tech company. I’m comfortable working in a codebase, and I regularly find myself deep in R&amp;D tasks where the hard part isn’t “coding” so much as translating messy, real-world legal complexity into solutions that are consistent and reliable. In this piece, I want to share how this approach works in practice: where it works best (and where it doesn’t), why it works, and the techniques I’ve found most effective for getting the best out of it.</p>
+<section id="the-branches-unexplored" class="level2">
+<h2 class="anchored" data-anchor-id="the-branches-unexplored">The Branches Unexplored</h2>
+<p>The core limitation of using a single agent is not that it <em>can’t</em> consider alternatives — it can — but that it tends to commit early to a framing. LLM output is stochastic, but it’s also path-dependent: once a line of reasoning is written into the context window, subsequent generation is conditioned on it, which encourages the model to stay consistent with that path. In effect, a single agent run becomes one trajectory through the solution space.</p>
+<p>This early commitment creates an anchoring effect that shapes everything that follows. The analysis can <em>look</em> comprehensive, yet in practice it often becomes a walk down one or two plausible branches of a much larger decision tree. Even when you explicitly ask an agent to consider multiple branches of reasoning, those branches will be explored in a correlated, anchored way within the same narrative.</p>
+<p>That raises an obvious risk: what if the best solution sits on a branch the agent never seriously explores?</p>
+<p>This is exactly where multiple agents come into their own. You can set each agent to pursue a distinct line of enquiry, forcing broad exploration instead of prematurely pruning the tree. Each agent can then explore its chosen path deeply, without being pulled back into a shared narrative too early.</p>
+<p><img src="https://liamtg.github.io/blog/posts/202601_multi-agent-problem-solving/Gemini_Generated_Image_x3pijbx3pijbx3pi.png" class="img-fluid" alt="Infographic diagram titled 'AI Workflow Comparison: Single vs. Multiple Agents.' The left side illustrates a 'Standard Workflow (Single Agent)' as a linear, vertical path where a single agent makes early choices, pruning alternative options marked with red X's, leading to a potentially premature solution based on sequential analysis. The right side illustrates a 'Multi-Agent Workflow (Parallel Exploration)' where a single problem branches into three distinct, coloured parallel paths (labeled Cognitive Divergence), pursued independently by Agent A, Agent B, and Agent C using different models and contexts. These three paths converge into a central 'Synthesis &amp; Critique Loop (Debate &amp; Evaluation)' node before resulting in a final 'Robust Solution,' demonstrating parallel exploration and synthesised outcomes."></p>
+<p>Because the agents work independently without seeing one another’s drafts, they avoid the kind of “cross-contamination” you often get when one thread tries to explore competing approaches simultaneously. Ask a single agent to compare a rules-based approach with a machine-learning approach, and by the time it reaches the second option it’s often already anchored to the framing of the first. The comparison may be fair, but it’s rarely <em>independent</em>.</p>
+<p>Ultimately, the goal is for each agent’s work to be a separate roll of the dice through the solution space. Of course, if every agent starts from the same assumptions, you’ll get near-identical answers. The key is diversity: you need to deliberately construct a varied “team” of agents to encourage genuine cognitive divergence.</p>
+</section>
+<section id="cognitive-divergence-how-to-roll-the-dice" class="level2">
+<h2 class="anchored" data-anchor-id="cognitive-divergence-how-to-roll-the-dice">Cognitive Divergence: How to Roll the Dice</h2>
+<p>The most valuable outcomes come when your agents disagree.</p>
+<p>On a recent project, I used three agents to decide whether to analyse input data deterministically (hard-coded rules) or probabilistically (using an LLM). Two agents favoured a rules-based approach, since it was fast, efficient and reproducible, and it handled our sample data well. The third agent focused almost entirely on out-of-sample edge cases: the kinds of situations that would inevitably break any rule set we could reasonably write. It was this divergence that was critical. It highlighted the trade-offs early and led us towards the hybrid approach we ultimately adopted: deterministic where tests could guarantee coverage, and an LLM-first fallback when the input was outside those guarantees.</p>
+<p>There are a few practical ways to engineer this kind of divergence:</p>
+<ul>
+<li><p><strong>Use different models.</strong> Claude, Codex and Gemini often take meaningfully different routes through the same problem. The point isn’t which model is “best”; it’s that different strengths and blind spots create productive tension.</p></li>
+<li><p><strong>Vary the context.</strong> Give agents different starting material (or different slices of it) so they follow different reasoning trajectories.</p></li>
+<li><p><strong>Vary the role and constraints.</strong> One agent is tasked with “fastest shippable path”, another with “most robust long-term design”, another with “assume this will break in production and tell me how”.</p></li>
+<li><p><strong>Include at least one low-context run.</strong> An agent given minimal context is less likely to inherit your implicit assumptions, and can reframe the problem in ways you might not expect.</p></li>
+</ul>
+<p>A debugging example may be instructive here. We had code intended to generate Microsoft Word documents, but it could only produce a file that Word insisted on “repairing” before it would open cleanly. We assigned two agents to investigate. Both received the broken document, but only one was given the repaired version as well.</p>
+<p>Both agents identified the immediate issue — malformed XML in how track changes were being inserted. But the agent <em>without</em> the repaired document went further. It traced the issue back to a shared function that only triggered for certain document types. That’s what made the bug insidious: the function didn’t always run, so the failures appeared sporadic rather than systematic. By surfacing the root cause, we fixed an entire class of problems we hadn’t yet encountered.</p>
+<p>This is the real value of multi-agent work: different instincts and different starting points. One agent pushes for a clean deterministic solution, another worries about edge cases, and a third reframes the problem entirely. Done well, that breadth can makes the eventual decision much more robust.</p>
+<p>But running multiple agents in parallel creates a new problem of its own: you now have a handful of opinions, competing architectural patterns, and a lot of noise. The task becomes consolidation: what do we do next?</p>
+</section>
+<section id="synthesis-uncovering-the-path-forward" class="level2">
+<h2 class="anchored" data-anchor-id="synthesis-uncovering-the-path-forward">Synthesis: Uncovering the Path Forward</h2>
+<p>One of the most effective ways I’ve found to synthesise conflicting responses is to force the disagreements into the open and make the trade-offs explicit.</p>
+<p>In practice, I often run a lightweight critique loop, something like:</p>
+<ol type="1">
+<li><p><strong>Independent proposals</strong> (Agents A and B each propose a solution)</p></li>
+<li><p><strong>Swap &amp; critique</strong> (A critiques B; B critiques A — assumptions, failure modes, trade-offs)</p></li>
+<li><p><strong>Merge</strong> (combine the strongest elements into a “best-of” proposal)</p></li>
+<li><p><strong>Red team</strong> (Agent C attacks the merged plan for edge cases and failure modes)</p></li>
+<li><p><strong>Decide + record</strong> (final decision, assumptions, and the tests that will validate it)</p></li>
+</ol>
+<p><img src="https://liamtg.github.io/blog/posts/202601_multi-agent-problem-solving/Gemini_Generated_Image_wdj5xqwdj5xqwdj5.png" class="img-fluid" alt="Infographic diagram titled 'Example Structured Critique Loop'. Two parallel initial steps, 'AGENT A: Proposal 1' and 'AGENT B: Proposal 2', lead into cross-referencing 'SWAP &amp; CRITIQUE' boxes where each agent reviews the other's proposal. Their outputs combine into a central 'MERGED PROPOSAL ('Best-of' Version)'. This merged proposal is then passed downward to 'AGENT C (Red Team)' to attack for failure modes and edge cases. The resulting analysis goes to a 'JUDGE' step which applies a score rubric based on criteria like speed and robustness. The diagram ends at a final bottom box labeled 'FINAL OUTPUT: Decision + Assumptions + Tests'."></p>
+<p>Forcing debates like this into the open surfaces issues that a single-thread workflow would often bury. It also tends to produce a stronger result than any original analysis: many of the best ideas can emerge during this critique and synthesis stage.</p>
+<p>Even when the approaches are fundamentally incompatible — say, Agent A advocates for a complex Python object model while Agent B suggests a lightweight shell script — the “losing” path can still be valuable. It often reveals logic gaps or edge cases the “winning” agent missed.</p>
+<p>Depending on the problem, it can also be worth running more than one promising (and potentially divergent) path for longer before committing — especially when the cost of switching later is high. This is common with decisions like choosing between two very different libraries for a core dependency, or deciding between an in-memory approach and a database-first design.</p>
+<p>With respect to the latter case, we faced this exact trade-off. Our initial instinct was that the speed and simplicity of an in-memory approach would provide the best user experience. But after exploring both approaches in parallel, it became clear that it wouldn’t give us the flexibility we needed for the functionality we were aiming for. Without that parallel exploration, we’d likely have built ourselves into a corner and paid for it later in a painful refactor.</p>
+<p>In these cases, being able to branch cleanly and let agents explore fundamentally different implementations in parallel can be incredibly powerful. Just as importantly, keeping a record of the branches you explored — even the ones you abandon — creates a valuable trail of evidence you and your future agents can return to as the project evolves.</p>
+</section>
+<section id="validation-and-pitfalls" class="level2">
+<h2 class="anchored" data-anchor-id="validation-and-pitfalls">Validation and Pitfalls</h2>
+<p>Of course, a multi-agent approach still has its own pitfalls. The most insidious is false confidence from consensus: when multiple agents converge on the same answer, it’s tempting to treat that as validation. But models share training data and blind spots, so whilst convergence may well mean you’ve found a robust solution, it may also mean you’ve found a popular mistake. The opposite problem is equally real: if your agents return four incompatible approaches and you lack the domain knowledge to evaluate them, it can become overwhelming.</p>
+<p>A useful discipline is to treat any agent output as a <em>proposal</em>, not an answer, and to make the next step something that can quickly prove or disprove it - write a test (or minimal reproducible example) that reproduces the current failure or specifies the behaviour you need, build a tiny prototype to test the key assumptions, identify and explicitly check the implicit assumptions. Wherever possible, prefer executable validation over persuasive prose. And when the stakes are high (or the switching cost is high), it can be worth taking more than one promising line of reasoning further on separate git branches before committing.</p>
+<p>This is also where a side benefit of multiple agents appears: it can be reassuring to have one agent play “QA” and try to break the plan systematically.</p>
+<p>As impressive as these agents are, they don’t remove the need for your own judgement. Highly capable models are exceptionally good at producing answers that <em>sound</em> highly capable. If you don’t do some independent exploration and ensure that you understand the problem space, it’s easy to accept a well-structured, plausible recommendation that rests on flawed logic or an incorrect premise.</p>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Not every problem is complex enough to justify running multiple agents. The approach shines when uncertainty is high and the cost of choosing the wrong path is significant. But there’s a real cost: spinning agents up, providing context, reconciling competing outputs, the extra cognitive load — and, depending on your setup, token usage across parallel runs can add up quickly.</p>
+<p>It’s rarely worth it for simple execution work, or when you can validate the answer quickly with a small prototype. I’ll also avoid it when a decision is easily reversible — it may be faster to build, test, and iterate.</p>
+<p>In practice, I move between single-agent and multi-agent modes within the same project. When a project involves an entirely new product category, it can be highly instructive to use multiple agents early — exploring use cases, designing primitives, and pressure-testing underlying data models. Once the shape of the problem is clearer, I’ll often return to a single agent, and only bring multiple agents back in when the work becomes non-obvious again.</p>
+<p>But when a problem <em>does</em> demand deep, careful consideration across several viable options, I’ve found this approach invaluable. My key takeaways:</p>
+<ul>
+<li><p><strong>Do the thinking yourself first</strong> — don’t outsource your understanding to the model.</p></li>
+<li><p><strong>Diversify your agents</strong> — vary models, context, constraints, and starting assumptions.</p></li>
+<li><p><strong>Mix guided and unguided runs</strong> — test your hypotheses, but leave room for reframing.</p></li>
+<li><p><strong>Make agents critique one another</strong> — structured debate surfaces hidden assumptions.</p></li>
+<li><p><strong>Validate ruthlessly</strong> — tests and prototypes beat persuasive reasoning every time.</p></li>
+<li><p><strong>Resist premature commitment</strong> — you have parallel intelligence available, so use it.</p></li>
+<li><p><strong>Keep a record of explorations</strong> — even abandoned branches become valuable context later.</p></li>
+</ul>
+<p>Every individual now has what previously required a team: parallel, specialised intelligence that can explore multiple paths simultaneously. The hard part is learning how to wield it.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Nathaniel Whittemore, “The Dr.&nbsp;Strange Theory of AI Agent Work,” LinkedIn (Feb 21, 2025), https://www.linkedin.com/pulse/dr-strange-theory-ai-agent-work-nathaniel-whittemore-ueswe.↩︎</p></li>
+<li id="fn2"><p>Sam Altman, “The Gentle Singularity” (10 June 2025), https://blog.samaltman.com/the-gentle-singularity.↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>AI</category>
+  <category>LLMs</category>
+  <category>Agents</category>
+  <category>Productivity</category>
+  <guid>https://liamtg.github.io/blog/posts/202601_multi-agent-problem-solving/</guid>
+  <pubDate>Sun, 18 Jan 2026 13:00:00 GMT</pubDate>
+  <media:content url="https://liamtg.github.io/blog/posts/202601_multi-agent-problem-solving/Gemini_Generated_Image_x3pijbx3pijbx3pi.png" medium="image" type="image/png" height="79" width="144"/>
+</item>
 <item>
   <title>We All Need to Speak AI</title>
   <dc:creator>Liam Gilchrist</dc:creator>
