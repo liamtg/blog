@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/202602_crosswords-vs-code/index.html",
       "/posts/202601_multi-agent-problem-solving/index.html",
       "/posts/202511_ffmpeg/index.html"
     ]

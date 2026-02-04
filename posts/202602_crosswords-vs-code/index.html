@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Liam Gilchrist">
+<meta name="dcterms.date" content="2026-01-26">
 
-<title>Blogs – Liam’s Blog</title>
+<title>Are Crosswords Harder than Code? – Liam’s Blog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,77 +70,19 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
+<link rel="stylesheet" href="../../styles.css">
+</head>
 
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="Liam's Blog" href="index.xml" data-external="1"></head>
-
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Liam’s Blog</span>
     </a>
   </div>
@@ -151,7 +93,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">Liam Gilchrist</span></a>
   </li>  
   <li class="nav-item compact">
@@ -174,148 +116,115 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">Blogs</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">Are Crosswords Harder than Code?</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">LLMs</div>
+                <div class="quarto-category">problem-solving</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Liam Gilchrist </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 26, 2026</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="QWdlbnRz">Agents <span class="quarto-category-count">(1)</span></div><div class="category" data-category="YWdlbnRz">agents <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QUk=">AI <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Q2xhdWRlJTIwQ29kZQ==">Claude Code <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RkZtcGVn">FFmpeg <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExNcw==">LLMs <span class="quarto-category-count">(2)</span></div><div class="category" data-category="cHJvYmxlbS1zb2x2aW5n">problem-solving <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJvZHVjdGl2aXR5">Productivity <span class="quarto-category-count">(1)</span></div><div class="category" data-category="d29ya2Zsb3dz">workflows <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<p>Sometimes it’s still hard to predict what will trip up AI.</p>
+<p>Over coffee last month, my stepfather mentioned he’d tried to use AI to make a crossword — and it had failed miserably. Since I try to find a way to use AI in pretty much everything I do, and generally find it exceptionally proficient, I assumed this must have been down to user error. The task sounded trivial — clearly this was a case of a lack of familiarity with the tools — so I confidently decided to show him how it was done.</p>
+<p><em>(This project was run in late December 2025, on a few of the then-frontier models.)</em></p>
+<section id="the-objective-create-a-crossword" class="level2">
+<h2 class="anchored" data-anchor-id="the-objective-create-a-crossword">The Objective: Create a Crossword</h2>
+<p>The crossword was for Year 6 students studying Australian history. We had a two-page document containing a list of around 30 questions and answers. The task for the AI was to arrange the answers into a crossword-style grid, and draw it up.</p>
+<p>A successful answer needed to have:</p>
+<ul>
+<li>every answer placed (no answer dropped);</li>
+<li>every answer correct (no spelling mistakes, no transposed letters);</li>
+<li>obey basic crossword rules (intersections encouraged; no accidental “side-by-side” words creating nonsense); and</li>
+<li>clues cleanly listed and presented in a standard crossword format.</li>
+</ul>
+<p>I also wanted to demonstrate that this workflow could be done using basic tooling available to everyone, without any special knowledge of the AI space, and without requiring specialised coding tools or AI agents. So this project was done entirely within the chat windows of the respective AI providers.</p>
+</section>
+<section id="approach-1-one-shot-image-generation" class="level2">
+<h2 class="anchored" data-anchor-id="approach-1-one-shot-image-generation">Approach 1: One Shot Image Generation</h2>
+<p><img src="painter_crossword.png" class="img-fluid"></p>
+<p>I started with Gemini because its latest “nano banana” image mode was all the rage online at the time, so I was pretty confident it would give the challenge a good crack. People seemed particularly impressed by its ability to handle text inside images much more reliably than other models (a notoriously difficult problem for diffusion models). So I gave it a simple prompt, fed in the two-page “clues and answers” document, went to make myself a cup of coffee, and looked forward to a nice tidy crossword image waiting for me when I got back.</p>
+<p>Now I might have been a little naive, but even so, what I got back was … really bad. It did <em>look</em> like a crossword at first glance. Indeed it even had one or two correct answers. But unfortunately it contained only a handful of answers from the list I had asked it to include, and many of the ones that were included were wrong in the typical ways we’ve seen from LLMs in the past: partial answers, fragments of two answers merged together, complete nonsense strings of letters where a real answer should have been.</p>
+<p>For example, one entry came out as “NORFLKS”, which I assume was trying to be “NORFOLK…”. In another place it produced “IISLAF” — which was, as far as I could work out, not even a plausible misspelling of a valid answer.</p>
+<p>Moreover, the model didn’t seem to even understand how crosswords are meant to work. In a crossword, letters can intersect, but you can’t have two words run alongside each other and accidentally form new “words” through their adjacent letters. This was something of which the model seemed blissfully unaware, happily placing words parallel to each other in breach of these basic crossword rules.</p>
+<p>Clearly, the image model was struggling with the fact that a crossword requires an extremely text-dense output. Even though Nano Banana was much more capable at text rendering than many other models, being competent at painting letters on a sign doesn’t necessarily make you good at crafting a language puzzle (or drawing a page of text from a book).</p>
+<p>So I decided to switch tack and focus on pure text-based models.</p>
+</section>
+<section id="approach-2-one-shot-text-generation" class="level2">
+<h2 class="anchored" data-anchor-id="approach-2-one-shot-text-generation">Approach 2: One Shot Text Generation</h2>
+<p>To simplify things, I removed the image generation aspect entirely and focused on pure text output. I tested this approach on Gemini, GPT-5.2, and Opus 4.5. All these models were still top of the line as at the beginning of 2026.</p>
+<p>Initially I provided the models with the same list of questions and answers, and asked them to respond with a text-based grid with rows of letters and spaces, like a simple ASCII crossword.</p>
+<p>Surprisingly, even when using extended thinking and the most powerful models, the results were actually not much better than the image generation attempt. We were still seeing truncations and half-placements. We were getting answers like “NENGLANDIRELAND” instead of “ENGLAND” and “IRELAND”. And we still had both a meaningful chunk of answers missing, and illegal placement of parallel words.</p>
+</section>
+<section id="approach-3-stop-and-think" class="level2">
+<h2 class="anchored" data-anchor-id="approach-3-stop-and-think">Approach 3: Stop and Think</h2>
+<p><img src="robot_crossword.png" class="img-fluid"></p>
+<p>I tackled the illegal parallel placement issue first — words placed directly beside each other creating phantom words. To handle this, I asked the models to first carefully research the rules of crossword construction, explain the key points, and then consider how to apply them to the task at hand. Unsurprisingly, the models were able to articulate crossword rules perfectly. And being forced to explore and explain the rules upfront immediately solved the issue. It seemed the knowledge was there, but it wasn’t reliably “activated” until I forced the constraints into the foreground.</p>
+<p>Next I tackled the corrupted answer text. It seemed clear that even these top class models (as at the end of 2025) were still being tripped up by their tokenisation. To an LLM, the words England and Ireland may each be a single token. That means the model doesn’t naturally ‘see’ words as sequences of letters unless forced to, so asking it to work out how these words intersect is kind of like asking if the number 5 intersects with the number 6.</p>
+<p>It was clear that, unless we could force the model to slow down and decompose its tokens into the individual letters, we were not going to get a sensible answer. To do this, I cut the context down to the bare essentials so the model had space to think. Instead of providing the two-page question/answer document to the model, I extracted the raw list of answers (words only), started clean conversations, and asked the models to focus <em>only</em> on placing those words into a crossword grid.</p>
+<p>With Opus 4.5 in particular, the result was a clean HTML crossword solution with all words correctly placed, no rule violations, and nothing missing — including a properly mapped clue list. Turning that into a printable student handout was then a straightforward formatting pass.</p>
+</section>
+<section id="outcome" class="level2">
+<h2 class="anchored" data-anchor-id="outcome">Outcome</h2>
+<p>When we sat back and assessed the final crossword, it was good — certainly good enough — but it could have been better. It was a little sparse, with more empty space than a carefully constructed puzzle should have. We did identify potential improvements to word placements that would improve the crossword and make it denser, although these were not immediately obvious and required careful iteration.</p>
+<p>Corralling the models into successfully completing this task was much harder than I had naively expected. All in all, my stepfather was happy with the end result, and estimated it saved him 2–3 hours of work. Which, for about 30 minutes of wrangling, was a <em>reasonable</em> outcome, but the efficiency improvements were much less than what I have come to expect in projects like this.</p>
+</section>
+<section id="takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="takeaways">Takeaways</h2>
+<p><img src="code_crossword_2.jpeg" class="img-fluid"></p>
+<p>What was surprising to me was that even once you remove image generation entirely, this is still clearly a very challenging problem for pure language models. The challenges the language models faced were ultimately fairly easy to solve methodically, but the models really needed to be guided through them step by step. They didn’t reliably apply crossword rules until I explicitly forced them to internalise those constraints. The AI was unable to handle decomposition of tokens until its attention was focused solely on that problem.</p>
+<p>I use these models for pretty complex work — difficult coding challenges, architectural reasoning, complicated legal analysis — and have generally found them remarkably capable. But ask them to make a crossword, and I was seeing the types of errors that I hadn’t really seen for a number of model generations. Now admittedly, this is a slightly unfair comparison since I didn’t use any agentic tooling for this project, which I expect would have solved this particular problem much more quickly. However, the point remains that the foundation models failed in ways that I was not expecting them to still fail.</p>
+<p>It’s no doubt true that these models have seen vastly more code than crosswords in their training data. And it’s hard for the AI to validate the result when there’s no compiler to catch that a vertical word placement in a crossword breaks a horizontal rule 10 lines down. But my sense is the issue is more fundamental than this. These models excel at use cases like coding, where language and logic are doing a lot of the heavy lifting. Here we had a subtly different challenge: a constraint-satisfaction problem wrapped in language, requiring the model to hold multiple intersecting rules in mind while manipulating a two-dimensional structure it can only “see” through text.</p>
+<p>What I found most instructive was that the models only really “clicked” once the task was reduced to: <em>place these words in a grid, under these constraints</em>. And once it clicked, the models turned to code to solve it.</p>
+<p>Reviewing their thought processes (as shown by the chain-of-thought summaries in the respective models), it was clear that the strongest solutions converged on the same basic algorithmic approach. Opus 4.5, for instance, designed something in python that:</p>
+<ol type="1">
+<li><p>Cleaned and sorted the words required for the grid</p></li>
+<li><p>Chose a starting grid size (and rules for expanding/shrinking it during the search)</p></li>
+<li><p>Defined an order in which to attempt placements (usually longest-first)</p></li>
+<li><p>Used a placement strategy that maximised intersections</p></li>
+<li><p>Implemented backtracking for dead ends</p></li>
+</ol>
+<p>I am sure the final output could have been tighter had I iterated it further, but the approach was sound. Ultimately, the model succeeded when it stopped trying to design its solution in prose, and instead treated the problem as constraint satisfaction with search. It was interesting that the frontier models only took this approach reliably when we simplified the inputs — and, perhaps, gave them the space they needed to think.</p>
+<p>Anyway, this was a small project, but unexpectedly revealing. I thought it would be a one-shot. It turned into a neat little window into where even top-tier models still wobble.</p>
+<p>So no — crosswords aren’t harder than code for these models. They’re just a different kind of hard. It was a useful reminder that, with AI, problems that look like “just language” are often more reliably solved algorithmically.</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="QUklMkNMTE1zJTJDcHJvYmxlbS1zb2x2aW5n" data-listing-date-sort="1769346000000" data-listing-file-modified-sort="1770183763792" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1790">
-<div class="thumbnail"><a href="./posts/202602_crosswords-vs-code/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/202602_crosswords-vs-code/code_crossword_2.jpeg" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/202602_crosswords-vs-code/index.html" class="no-external">Are Crosswords Harder than Code?</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExNcw=='); return false;">LLMs</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('cHJvYmxlbS1zb2x2aW5n'); return false;">problem-solving</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/202602_crosswords-vs-code/index.html" class="no-external">
-Sometimes it’s still hard to predict what will trip up AI.
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/202602_crosswords-vs-code/index.html" class="no-external">
-<div class="listing-date">
-Jan 26, 2026
-</div>
-<div class="listing-author">
-Liam Gilchrist
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="QUklMkNMTE1zJTJDQWdlbnRzJTJDUHJvZHVjdGl2aXR5" data-listing-date-sort="1768741200000" data-listing-file-modified-sort="1768819907682" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2344">
-<div class="thumbnail"><a href="./posts/202601_multi-agent-problem-solving/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/202601_multi-agent-problem-solving/Gemini_Generated_Image_x3pijbx3pijbx3pi.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/202601_multi-agent-problem-solving/index.html" class="no-external">Solving Challenging Problems with Multiple Agents</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TExNcw=='); return false;">LLMs</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QWdlbnRz'); return false;">Agents</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvZHVjdGl2aXR5'); return false;">Productivity</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/202601_multi-agent-problem-solving/index.html" class="no-external">
-<p>How to effectively explore the solution space by running multiple AI agents in parallel.</p>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/202601_multi-agent-problem-solving/index.html" class="no-external">
-<div class="listing-date">
-Jan 19, 2026
-</div>
-<div class="listing-author">
-Liam Gilchrist
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="Q2xhdWRlJTIwQ29kZSUyQ2FnZW50cyUyQ0ZGbXBlZyUyQ3dvcmtmbG93cw==" data-listing-date-sort="1762952400000" data-listing-file-modified-sort="1764828647064" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1715">
-<div class="thumbnail"><a href="./posts/202511_ffmpeg/index.html" class="no-external">
-
-<img loading="lazy" src="./posts/202511_ffmpeg/image.png" class="thumbnail-image">
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/202511_ffmpeg/index.html" class="no-external">We All Need to Speak AI</a>
-</h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2xhdWRlJTIwQ29kZQ=='); return false;">Claude Code</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('YWdlbnRz'); return false;">agents</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RkZtcGVn'); return false;">FFmpeg</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('d29ya2Zsb3dz'); return false;">workflows</div>
-
-</div>
-<div class="delink listing-description"><a href="./posts/202511_ffmpeg/index.html" class="no-external">
-It’s trite to say that large language models will fundamentally reshape the way we work. What’s less clear is how that reshaping will actually happen in practice.
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/202511_ffmpeg/index.html" class="no-external">
-<div class="listing-date">
-Nov 13, 2025
-</div>
-<div class="listing-author">
-Liam Gilchrist
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
